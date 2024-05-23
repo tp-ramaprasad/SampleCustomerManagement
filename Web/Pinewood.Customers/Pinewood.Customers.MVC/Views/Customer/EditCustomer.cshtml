@@ -1,0 +1,145 @@
+﻿@model UpdateCustomerModel
+
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="p-4">@ViewData["Title"]</h3>
+    </div>
+</div>
+
+@{
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <br />
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+<br />
+
+<form asp-controller="Customer" asp-action="EditCustomer" method="post">
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <div class="row mt-3">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" maxlength="100" minlength="2" required />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" maxlength="100" minlength="2" required />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <br />
+            @{
+                var maxDate = DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd");
+                var minDate = DateTime.Now.AddYears(-100).ToString("yyyy-MM-dd");
+            }
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="DateOfBirth"></label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" max="@maxDate" min="@minDate" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="ReferenceInfoData.Genders" class="form-label mb-0"></label>
+                <select asp-for="Gender.Id"
+                        asp-items="@(new SelectList(Model.ReferenceInfoData.Genders, nameof(GenderModel.Id), nameof(GenderModel.Name)))"
+                        class="form-select form-select mb-1">
+                    <option value="-1"> --Please Select a Gender-- </option>
+                </select>
+                <span asp-validation-for="ReferenceInfoData.Genders" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="Contact.PhoneNumber"></label>
+                <input asp-for="Contact.PhoneNumber" class="form-control" required maxlength="14" />
+                <span asp-validation-for="Contact.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="Contact.EmailAddress"></label>
+                <input asp-for="Contact.EmailAddress" class="form-control" type="email" maxlength="255" required />
+                <span asp-validation-for="Contact.EmailAddress" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="Address.AddressLine1"></label>
+                <input asp-for="Address.AddressLine1" class="form-control" maxlength="255" />
+                <span asp-validation-for="Address.AddressLine1" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="Address.AddressLine2"></label>
+                <input asp-for="Address.AddressLine2" class="form-control" maxlength="255" />
+                <span asp-validation-for="Address.AddressLine2" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="Address.City"></label>
+                <input asp-for="Address.City" class="form-control" maxlength="100" required />
+                <span asp-validation-for="Address.City" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="Address.State"></label>
+                <input asp-for="Address.State" class="form-control" maxlength="100" />
+                <span asp-validation-for="Address.State" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="ReferenceInfoData.Countries" class="form-label mb-0"></label>
+                <select asp-for="Address.CountryId"
+                        asp-items="@(new SelectList(Model.ReferenceInfoData.Countries, nameof(CountryModel.Id), nameof(CountryModel.Name)))"
+                        class="form-select form-select mb-1">
+                    <option value="-1">--Please Select a Country--</option>
+                </select>
+                <span asp-validation-for="ReferenceInfoData.Countries" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="Address.ZipCode"></label>
+                <input asp-for="Address.ZipCode" class="form-control" maxlength="7" required />
+                <span asp-validation-for="Address.ZipCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="Preference.VehicleType"></label>
+                <input asp-for="Preference.VehicleType" class="form-control" maxlength="50" />
+                <span asp-validation-for="Preference.VehicleType" class="text-danger"></span>
+            </div>           
+            <div class="form-group col-6 col-sm-6">
+                <label asp-for="Preference.Brand"></label>
+                <input asp-for="Preference.Brand" class="form-control" maxlength="50" />
+                <span asp-validation-for="Preference.Brand" class="text-danger"></span>
+            </div>            
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="ReferenceInfoData.Preferences" class="form-label mb-0"></label>
+                <select asp-for="Preference.ContactPreference"
+                        asp-items="@(new SelectList(Model.ReferenceInfoData.Preferences))"
+                        class="form-select form-select mb-1">
+                    <option value=""> --Please Select a Contact Preference-- </option>
+                </select>
+                <span asp-validation-for="ReferenceInfoData.Preferences" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row button-container mt-3 pt">
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary btn-lg">Update</button> 
+                <a class="btn btn-secondary btn-lg" asp-action="Index" asp-route-pageNumber="@ViewBag.pageNumber">Back to Full List</a>
+            </div>
+        </div>
+    </div>
+</form>

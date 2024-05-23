@@ -1,0 +1,142 @@
+﻿@model PaginatedList<GetCustomerModel>
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="p-4">All Customers</h3>
+    </div>
+    @*  <p>
+    <a asp-action="AddCustomer">Add Customer</a>
+    </p> *@
+</div>
+
+
+<div class="row button-container mt-3 pt">
+    <div class="col-md-6">
+        <form class="d-flex" asp-action="Index" asp-controller="Customer">
+            <input type="search" name="searchString" class="form-control me-2" placeholder="Search" aria-label="Search" value="@ViewBag.currentFilter" />
+            <button class="btn btn-dark btn-sm" type="submit"> Search By name</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <a class="btn btn-secondary" asp-action="Index">Back to Full List</a>
+    </div>
+</div>
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date Of Birth</th>
+                <th>Phone Number</th>
+                <th>Email Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                //var pageWiseCount = Model.PageIndex * Model.PageSize;
+
+                //var count = (Model.PageIndex == 1) ? 1 : ((pageWiseCount > Model.TotalItems) ? Model.TotalItems-Model.PageSize : (Model.TotalItems - pageWiseCount));
+
+            }
+            @foreach (var customer in Model.Select((x, i) => new { Data = x, Index = i }))
+            {
+                <tr id="@customer.Data.Id">
+                    <td>@(customer.Index + ((Model.PageIndex - 1) * Model.PageSize) + 1)</td>
+                    <td>@customer.Data.FirstName</td>
+                    <td>@customer.Data.LastName</td>
+                    <td>@customer.Data.DateOfBirth.ToShortDateString()</td>
+                    <td>@customer.Data.Contact.PhoneNumber</td>
+                    <td>@customer.Data.Contact.EmailAddress</td>
+                    <td>
+                        <a asp-action="EditCustomer" asp-route-id="@customer.Data.Id" asp-route-pageNumber="@Model.PageIndex" style="cursor:pointer">Edit</a> |
+                        <a asp-action="GetCustomerDetails" asp-route-id="@customer.Data.Id" style="cursor:pointer">Details</a> |
+                        <a class="delete-customer" data-customer-id="@customer.Data.Id" style="cursor:pointer">Delete</a>
+                    </td>
+                </tr>
+                @* count++; *@
+            }
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-6">
+            <label>Showing Page @(Model.PageIndex) of @(Model.TotalPages)</label>
+        </div>
+        <div class="col-md-6">
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @(Model.PageIndex==1 ? "disabled":"")">
+                        <a class="page-link text-black" asp-route-pageIndex="1">
+                            <span>First</span>
+                        </a>
+                    </li>
+                    <li class="page-item @(!Model.HasPreviousPage ? "disabled":"")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.PageIndex-1)">
+                            <span>Previous</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                            <a class="page-link text-black" asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(!Model.HasNextPage ? "disabled":"")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.PageIndex+1)">
+                            <span>Next</span>
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.PageIndex==Model.TotalPages ? "disabled":"")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.TotalPages)">
+                            <span>Last</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+}
+else
+{
+    <p>There is no data to display.</p>
+}
+
+
+
+@section scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            $('.delete-customer').click(function (e) {
+                e.preventDefault();
+
+                var id = $(this).data('customer-id');
+
+                if (confirm('Are you sure you want to delete this customer?')) {
+                    $.ajax({
+                        url: '/Customer/DeleteCustomer/' + id,
+                        type: 'Delete',
+                        success: function (result) {
+                            alert(result.msg);
+                            window.location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('An error occurred during the deletion process: ' + error);
+                        }
+                    });
+
+                }
+            });
+        });
+
+    </script>
+
+    }

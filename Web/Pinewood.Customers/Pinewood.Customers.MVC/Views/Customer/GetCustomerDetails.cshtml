@@ -1,0 +1,38 @@
+﻿@model GetCustomerModel
+
+@{
+    ViewData["Title"] = "Customer Details";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="p-4">@ViewData["Title"]</h3>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mt-3">
+        <div class="col">
+            <h4>FirstName: @Model.FirstName</h4>
+            <h4>LastName:@Model.LastName</h4>
+        </div>
+        <h4>Date Of Birth: @Model.DateOfBirth.ToShortDateString()</h4>
+        <h4>Phone Number: @Model.Contact.PhoneNumber</h4>
+        <h4>Email Address: @Model.Contact.EmailAddress</h4>
+        <h4>Gender: @Model.Gender?.Name</h4>
+        <h4>Address Line1: @Model.Address.AddressLine1</h4>
+        <h4>Address Line2: @Model.Address.AddressLine2</h4>
+        <h4>City: @Model.Address.City</h4>
+        <h4>State: @Model.Address.State</h4>
+        <h4>Country: @Model.Address.Country?.Name</h4>
+        <h4>ZipCode: @Model.Address.ZipCode</h4>
+        <h4>VehicleType: @Model.Preference?.VehicleType</h4>
+        <h4>Brand: @Model.Preference?.Brand</h4>
+        <h4>ContactPreference: @Model.Preference?.ContactPreference</h4>
+    </div>
+    <div class="row button-container mt-3 pt">
+        <div class="col-6">
+            <a class="btn btn-primary btn-lg" asp-action="EditCustomer" asp-route-id="@Model.Id">Edit</a> |
+            <a class="btn btn-secondary btn-lg" asp-action="Index">Back to Full List</a>
+        </div>
+    </div>   
+</div>

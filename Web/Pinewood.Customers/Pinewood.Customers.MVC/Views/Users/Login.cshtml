@@ -1,0 +1,43 @@
+@{
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+@model Pinewood.Customers.MVC.Models.AuthenticationRequest
+
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+<div id="outer" class="rows">
+    <div class="col-md-4"> </div>
+    <div id="inner" class="col-md-6">
+        <div class="text-center">
+            <h6 class="display-5">Login</h6>
+        </div>
+        <hr />
+        <form method="post" id="loginForm" asp-area="" asp-action="Login" asp-controller="Users">
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="@Model.Email" class="control-label"></label>
+                <input asp-for="@Model.Email" class="form-control mt-1" type="text" placeholder="Please enter email" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group col-6 col-sm-6 mt-3">
+                <label asp-for="@Model.Password" class="control-label bg-white"></label>
+                <input type="password" asp-for="@Model.Password" class="form-control mt-1" placeholder="Password">
+                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mt-1"></div>
+            <div>
+                @if (Model != null && Model.ErrorVMModel != null)
+                {
+                    <label style="color: red">@Model.ErrorVMModel.Error</label>
+                }
+            </div>
+            <div class="flex-end mt-3">
+                <button class="btn btn-primary" type="submit"><b>Sign in</b></button>
+            </div>           
+        </form>
+    </div>
+</div>
